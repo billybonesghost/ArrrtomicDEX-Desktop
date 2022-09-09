@@ -1,31 +1,34 @@
 {
-    "accentColor": "#2C3D66FF",
+
+    "accentColor": "#BB9645FF",
     "foregroundColor": "#ffffffFF",
     "foregroundColor2": "#7A8EA1FF",
     "foregroundColor3": "#ABC0D3FF",
-    "backgroundColor": "#202337FF",
-    "secondBackgroundColor": "#24273DFF",
-    "backgroundColorDeep": "#171a2cFF",
+    "backgroundColor": "#000000FF",
+    "secondBackgroundColor": "#1B1B1BFF",
+    "backgroundColorDeep": "#161515FF",
+    "innerBackgroundColor": "#181818FF",
+    "floatingBackgroundColor": "#1B1B1BFF",
 
     "busyIndicatorColor": "#4986EAFF",
 
     "buttonColorDisabled": "#28375AFF",
-    "buttonColorEnabled": "#293254FF",
-    "buttonColorHovered": "#4068B929",
-    "buttonColorPressed": "#2932546C",
+    "buttonColorEnabled": "#BB9645FF",
+    "buttonColorHovered": "#BB9645FF",
+    "buttonColorPressed": "#BB9645FF",
     "buttonTextDisabledColor": "#444444FF",
     "buttonTextEnabledColor": "#ffffffFF",
     "buttonTextHoveredColor": "#ffffffFF",
     "buttonTextPressedColor": "#ffffffFF",
-
-    "gradientButtonStartColor": "#4986EAAD",
-    "gradientButtonEndColor": "#5A68E6FF",
-    "gradientButtonDisabledStartColor": "#5A68E64D",
-    "gradientButtonDisabledEndColor": "#4986EA34",
-    "gradientButtonHoveredStartColor": "#4986EAAD",
-    "gradientButtonHoveredEndColor": "#4986EAAD",
-    "gradientButtonPressedStartColor": "#4986EAFF",
-    "gradientButtonPressedEndColor": "#4986EAFF",
+ 
+    "gradientButtonStartColor": "#B38C30FF",
+    "gradientButtonEndColor": "#F2DE98FF",
+    "gradientButtonDisabledStartColor": "#B38C304D",
+    "gradientButtonDisabledEndColor": "#F2DE984D",
+    "gradientButtonHoveredStartColor": "#B38C30FF",
+    "gradientButtonHoveredEndColor": "#F2DE98FF",
+    "gradientButtonPressedStartColor": "#B38C30FF",
+    "gradientButtonPressedEndColor": "#F2DE98FF",
     "gradientButtonTextEnabledColor": "#FFFFFFFF",
     "gradientButtonTextDisabledColor": "#FFFFFFFF",
     "gradientButtonTextHoveredColor": "#FFFFFFFF",
@@ -34,19 +37,19 @@
     "checkBoxGradientStartColor": "#8892EBFF",
     "checkBoxGradientEndColor": "#9DD4F3FF",
 
-    "switchGradientStartColor": "#1D80B0FF",
-    "switchGradientEndColor": "#5B69E6FF",
+    "switchGradientStartColor": "#B38C30FF",
+    "switchGradientEndColor": "#F2DE98FF",
     "switchGradientStartColor2": "#FFFFFFFF",
     "switchGradientEndColor2": "#FFFFFFFF",
 
-    "comboBoxBackgroundColor": "#303757FF",
+    "comboBoxBackgroundColor": "#1B1B1BFF",
     "comboBoxArrowsColor": "#FFFFFFFF",
-    "comboBoxDropdownItemHighlightedColor": "#4663E8FF",
+    "comboBoxDropdownItemHighlightedColor": "#1B1B1B4D",
 
     "modalPageCounterGradientStartColor": "#1D80B0FF",
     "modalPageCounterGradientEndColor": "#5B69E6FF",
 
-    "notifPopupBackgroundColor": "#24273DFF",
+    "notifPopupBackgroundColor": "#1B1B1BFF",
     "notifPopupTextColor": "#FFFFFFFF",
     "notifPopupTimerColor": "#8790B2FF",
     "notifPopupTimerBackgroundColor": "#94A3B11F",
@@ -63,17 +66,14 @@
     "textPlaceholderColor": "#91A8E8FF",
     "textSelectedColor": "#0e1021FF",
 
-    "textFieldBackgroundColor": "#313555FF",
-    "textFieldActiveBackgroundColor": "#313555CC",
+    "textFieldBackgroundColor": "#272727FF",
+    "textFieldActiveBackgroundColor": "#272727CC",
     "textFieldPrefixColor": "#8790B2FF",
     "textFieldSuffixColor": "#456078FF#",
 
     "chartTradingLineBackgroundColor": "#24283dFF",
     "chartTradingLineColor": "#74fbeeFF",
 
-    "innerBackgroundColor": "#1F263FFF",
-
-    "floatingBackgroundColor": "#24273DFF",
 
     "rangeSliderBackgroundColor": "#5A68E6FF",
     "rangeSliderDistanceColor": "#4986EA3B",
@@ -81,9 +81,9 @@
     "rangeSliderIndicatorBackgroundEndColor": "#4986EAFF",
 
     "userIconColorStart": "#5A68E6FF",
-    "userIconColorEnd": "#4986EAAD",
+    "userIconColorEnd": "#B38C30FF",
 
-    "sidebarBgColor": "#202337FF",
+    "sidebarBgColor": "#000000FF",
     "sidebarVersionTextColor": "#2F5688FF",
     "sidebarCursorStartColor": "#31B1F0FF",
     "sidebarCursorEndColor": "#5B69E600",

@@ -1,7 +1,7 @@
 # Default project values
 set(DEX_API "mm2")
-set(DEX_RPCPORT 7783)
-set(DEX_RPC "http://127.0.0.1:7783")
+set(DEX_RPCPORT 7888)
+set(DEX_RPC "http://127.0.0.1:7888")
 set(DEX_PROJECT_NAME "Arrrtomicdex-desktop")
 set(DEX_DISPLAY_NAME "ArrrtomicDEX Desktop")
 set(DEX_MAINTENANCE_TOOL_NAME "ArrrtomicDEX Maintenance Tool")
