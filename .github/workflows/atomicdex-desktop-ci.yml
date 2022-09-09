@@ -239,7 +239,7 @@ jobs:
           export CC=clang-12
           echo "Running tests"
           ./ci_tools_atomic_dex tests release
-          cd build-Release/bin/AntaraAtomicDexTestsAppDir/usr/bin
+          cd build-Release/bin/ArrrtomicDEXTestsAppDir/usr/bin
           cat ${{ env.DEX_PROJECT_NAME }}-tests-result.xml
           #curl https://report.ci/upload.py --output upload.py
           ls
