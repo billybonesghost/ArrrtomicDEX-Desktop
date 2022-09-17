@@ -1,19 +1,18 @@
 {
-
-    "accentColor": "#BB9645FF",
+    "accentColor": "#262525B4",
     "foregroundColor": "#ffffffFF",
-    "foregroundColor2": "#7A8EA1FF",
-    "foregroundColor3": "#ABC0D3FF",
+    "foregroundColor2": "#B38C30FF",
+    "foregroundColor3": "#B38C30CC",
     "backgroundColor": "#000000FF",
     "secondBackgroundColor": "#1B1B1BFF",
     "backgroundColorDeep": "#161515FF",
     "innerBackgroundColor": "#181818FF",
     "floatingBackgroundColor": "#1B1B1BFF",
 
-    "busyIndicatorColor": "#4986EAFF",
+    "busyIndicatorColor": "#BB9645FF",
 
-    "buttonColorDisabled": "#28375AFF",
-    "buttonColorEnabled": "#BB9645FF",
+    "buttonColorDisabled": "#BB9645AA",
+    "buttonColorEnabled": "#BB9645EE",
     "buttonColorHovered": "#BB9645FF",
     "buttonColorPressed": "#BB9645FF",
     "buttonTextDisabledColor": "#444444FF",
@@ -34,8 +33,8 @@
     "gradientButtonTextHoveredColor": "#FFFFFFFF",
     "gradientButtonTextPressedColor": "#FFFFFFFF",
 
-    "checkBoxGradientStartColor": "#8892EBFF",
-    "checkBoxGradientEndColor": "#9DD4F3FF",
+    "checkBoxGradientStartColor": "#B38C30FF",
+    "checkBoxGradientEndColor": "#F2DE98FF",
 
     "switchGradientStartColor": "#B38C30FF",
     "switchGradientEndColor": "#F2DE98FF",
@@ -43,8 +42,8 @@
     "switchGradientEndColor2": "#FFFFFFFF",
 
     "comboBoxBackgroundColor": "#1B1B1BFF",
+    "comboBoxDropdownItemHighlightedColor": "#262525B4",
     "comboBoxArrowsColor": "#FFFFFFFF",
-    "comboBoxDropdownItemHighlightedColor": "#1B1B1B4D",
 
     "modalPageCounterGradientStartColor": "#1D80B0FF",
     "modalPageCounterGradientEndColor": "#5B69E6FF",
@@ -59,11 +58,11 @@
     "scrollBarIndicatorColor": "#8790B2FF",
     "scrollBarBackgroundColor": "#94A3B11F",
 
-    "tabSelectedColor": "#2C3D66FF",
+    "tabSelectedColor": "#BB9645FF",
 
     "textDisabledColor": "#444444FF",
     "textSelectionColor": "#4986EAFF",
-    "textPlaceholderColor": "#91A8E8FF",
+    "textPlaceholderColor": "#434343FF",
     "textSelectedColor": "#0e1021FF",
 
     "textFieldBackgroundColor": "#272727FF",
@@ -74,20 +73,19 @@
     "chartTradingLineBackgroundColor": "#24283dFF",
     "chartTradingLineColor": "#74fbeeFF",
 
-
     "rangeSliderBackgroundColor": "#5A68E6FF",
     "rangeSliderDistanceColor": "#4986EA3B",
     "rangeSliderIndicatorBackgroundStartColor": "#5A68E6FF",
     "rangeSliderIndicatorBackgroundEndColor": "#4986EAFF",
 
-    "userIconColorStart": "#5A68E6FF",
-    "userIconColorEnd": "#B38C30FF",
+    "userIconColorStart": "#B38C30FF",
+    "userIconColorEnd": "#F2DE98FF",
 
     "sidebarBgColor": "#000000FF",
-    "sidebarVersionTextColor": "#2F5688FF",
-    "sidebarCursorStartColor": "#31B1F0FF",
-    "sidebarCursorEndColor": "#5B69E600",
-    "sidebarLineTextHovered": "#2C87B9FF",
+    "sidebarVersionTextColor": "#BB9645FF",
+    "sidebarCursorStartColor": "#B38C30FF",
+    "sidebarCursorEndColor": "#B38C3000",
+    "sidebarLineTextHovered": "#BB9645FF",
     "sidebarLineTextSelected": "#FFFFFFFF",
 
     "tradeBuyModeSelectorBackgroundColorStart": "#6A4DE3FF",
