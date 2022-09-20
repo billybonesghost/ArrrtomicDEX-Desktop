@@ -13,10 +13,10 @@ env:
   DEX_API: "mm2-x"
   DEX_RPCPORT: 7888
   DEX_RPC: "http://127.0.0.1:7888"
-  DEX_PROJECT_NAME: "atomicdex-desktop"
-  DEX_DISPLAY_NAME: "AtomicDex Desktop"
-  DEX_COMPANY: "KomodoPlatform"
-  DEX_WEBSITE: "https://atomicdex.io/"
+  DEX_PROJECT_NAME: "arrrtomicdex-desktop"
+  DEX_DISPLAY_NAME: "ArrrtomicDex Desktop"
+  DEX_COMPANY: "Pirate"
+  DEX_WEBSITE: "https://pirate.black/"
 
 jobs:
 
