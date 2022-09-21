@@ -1351,7 +1351,7 @@
     "explorer_url": [
       "https://blockstream.info/"
     ],
-    "active": true,
+    "active": false,
     "currently_enabled": false
   },
   "BTC-BEP20": {
@@ -3997,7 +3997,7 @@
     "currently_enabled": false
   },
   "LTC": {
-    "active": true,
+    "active": false,
     "coin": "LTC",
     "coingecko_id": "litecoin",
     "coinpaprika_id": "ltc-litecoin",
@@ -10804,7 +10804,7 @@
       "https://pirate.explorer.dexstats.info/"
     ],
     "type": "ZHTLC",
-    "active": false,
+    "active": true,
     "currently_enabled": false,
     "wallet_only": false
   }
