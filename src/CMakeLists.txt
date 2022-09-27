@@ -158,14 +158,14 @@ set_target_properties(${PROJECT_NAME}_tests PROPERTIES UNITY_BUILD ON)
 # Main executable installation related
 if (LINUX)
     get_target_property(exe_runtime_directory_at ${PROJECT_NAME} RUNTIME_OUTPUT_DIRECTORY)
-    set(output_dir_at "${exe_runtime_directory_at}/AntaraAtomicDexAppDir")
+    set(output_dir_at "${exe_runtime_directory_at}/ArrrtomicDEXAppDir")
 
     magic_game_app_image_generation("${CMAKE_SOURCE_DIR}/cmake/install/linux"
             "dex.desktop"
             "dex.appdata.xml"
             "dex-logo-64.png"
             ${PROJECT_NAME}
-            AntaraAtomicDexAppDir
+            ArrrtomicDEXAppDir
             ${CMAKE_SOURCE_DIR}/assets)
 
     magic_game_app_image_generation("${CMAKE_SOURCE_DIR}/cmake/install/linux"
@@ -173,7 +173,7 @@ if (LINUX)
             "dex.appdata.xml"
             "dex-logo-64.png"
             ${PROJECT_NAME}_tests
-            AntaraAtomicDexTestsAppDir
+            ArrrtomicDEXTestsAppDir
             ${CMAKE_SOURCE_DIR}/assets)
 
     set(from_dir "${CMAKE_SOURCE_DIR}/cmake/install/linux")

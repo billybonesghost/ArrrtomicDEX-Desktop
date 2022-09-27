@@ -14,7 +14,7 @@ endif ()
 message(STATUS "PROJECT_ROOT_DIR -> ${PROJECT_ROOT_DIR}")
 set(PROJECT_QML_DIR ${PROJECT_ROOT_DIR}/atomic_defi_design/Dex)
 message(STATUS "PROJECT_QML_DIR -> ${PROJECT_QML_DIR}")
-set(PROJECT_APP_DIR AntaraAtomicDexAppDir)
+set(PROJECT_APP_DIR ArrrtomicDEXAppDir)
 set(PROJECT_APP_PATH ${CMAKE_SOURCE_DIR}/bin/${PROJECT_APP_DIR})
 set(PROJECT_BIN_PATH ${PROJECT_APP_PATH}/usr/bin/${DEX_PROJECT_NAME})
 set(PROJECT_LIB_PATH ${PROJECT_APP_PATH}/usr/lib)
@@ -63,11 +63,11 @@ execute_process(COMMAND ${LINUX_DEPLOY_PATH} ${PROJECT_BIN_PATH} -qmldir=${PROJE
         ECHO_ERROR_VARIABLE)
 message(STATUS "Copying ${PROJECT_APP_PATH} to ${TARGET_APP_PATH}/${PROJECT_APP_DIR}")
 file(COPY ${PROJECT_APP_PATH} DESTINATION ${TARGET_APP_PATH})
-execute_process(COMMAND zip -r ${DEX_PROJECT_NAME}-linux-${VERSION_ID}.zip AntaraAtomicDexAppDir
+execute_process(COMMAND zip -r ${DEX_PROJECT_NAME}-linux-${VERSION_ID}.zip ArrrtomicDEXAppDir
         WORKING_DIRECTORY ${TARGET_APP_PATH}
         ECHO_OUTPUT_VARIABLE
         ECHO_ERROR_VARIABLE)
-execute_process(COMMAND tar --zstd -cf ${DEX_PROJECT_NAME}-linux-${VERSION_ID}.tar.zst AntaraAtomicDexAppDir
+execute_process(COMMAND tar --zstd -cf ${DEX_PROJECT_NAME}-linux-${VERSION_ID}.tar.zst ArrrtomicDEXAppDir
         WORKING_DIRECTORY ${TARGET_APP_PATH}
         ECHO_OUTPUT_VARIABLE
         ECHO_ERROR_VARIABLE)

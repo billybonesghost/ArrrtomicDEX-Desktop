@@ -10,9 +10,9 @@ on:
     - cron: '0 0 * * 1'
 
 env:
-  DEX_API: "mm2"
-  DEX_RPCPORT: 7783
-  DEX_RPC: "http://127.0.0.1:7783"
+  DEX_API: "mm2-x"
+  DEX_RPCPORT: 7888
+  DEX_RPC: "http://127.0.0.1:7888"
   DEX_PROJECT_NAME: "atomicdex-desktop"
   DEX_DISPLAY_NAME: "AtomicDex Desktop"
   DEX_COMPANY: "KomodoPlatform"
@@ -210,16 +210,6 @@ jobs:
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
 
-      - name: import installer code signing certificates (macos)
-        if: runner.os == 'macOS'
-        uses: apple-actions/import-codesign-certs@v1
-        with:
-          keychain: ${{ github.run_id }}
-          keychain-password: ${{ github.run_id }}
-          create-keychain: false
-          p12-file-base64: ${{ secrets.CERTIFICATES_INSTALLER_P12 }}
-          p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
-
       - name: Build AtomicDEX (MacOS)
         if: runner.os == 'macOS'
         run: |
@@ -261,7 +251,7 @@ jobs:
           export CC=clang-12
           echo "Running tests"
           ./ci_tools_atomic_dex tests release
-          cd build-Release/bin/AntaraAtomicDexTestsAppDir/usr/bin
+          cd build-Release/bin/ArrrtomicDEXTestsAppDir/usr/bin
           cat ${{ env.DEX_PROJECT_NAME }}-tests-result.xml
           #curl https://report.ci/upload.py --output upload.py
           ls
