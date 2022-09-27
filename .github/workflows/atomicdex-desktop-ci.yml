@@ -1,4 +1,4 @@
-name: AtomicDex-Desktop CI
+name: ArrrtomicDex-Desktop CI
 
 on:
   pull_request:
@@ -184,7 +184,7 @@ jobs:
           echo "CXX=/usr/local/opt/llvm/bin/clang++" >> $GITHUB_ENV
           echo "CC=/usr/local/opt/llvm/bin/clang" >> $GITHUB_ENV
 
-      - name: Build AtomicDEX (Linux)
+      - name: Build ArrrtomicDEX (Linux)
         if: runner.os == 'Linux'
         run: |
           export QT_INSTALL_CMAKE_PATH=${{ github.workspace }}/Qt/${{ matrix.qt }}/gcc_64/lib/cmake
@@ -201,7 +201,7 @@ jobs:
           ./ci_tools_atomic_dex build release
           ./ci_tools_atomic_dex bundle release
 
-      - name: Build AtomicDEX (MacOS)
+      - name: Build ArrrtomicDEX (MacOS)
         if: runner.os == 'macOS'
         run: |
           export QT_INSTALL_CMAKE_PATH=${{ github.workspace }}/Qt/${{ matrix.qt }}/clang_64/lib/cmake
@@ -213,7 +213,7 @@ jobs:
           nimble build -y
           ./ci_tools_atomic_dex bundle ${{ matrix.type }} --osx_sdk=$HOME/sdk/MacOSX10.14.sdk --compiler=clang++
 
-      - name: Build AtomicDEX (Windows)
+      - name: Build ArrrtomicDEX (Windows)
         if: runner.os == 'Windows'
         shell: powershell
         run: |
