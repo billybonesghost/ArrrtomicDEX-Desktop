@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright © 2013-2021 The Komodo Platform Developers.                      *
+ * Copyright © 2013-2022 The Komodo Platform Developers.                      *
  *                                                                            *
  * See the AUTHORS, DEVELOPER-AGREEMENT and LICENSE files at                  *
  * the top-level directory of this distribution for the individual copyright  *
@@ -14,25 +14,19 @@
  *                                                                            *
  ******************************************************************************/
 
-#pragma once
+#include <nlohmann/json.hpp>
 
-#include <QSortFilterProxyModel>
+#include "get_public_key_rpc.hpp"
 
-namespace atomic_dex
+namespace atomic_dex::mm2
 {
-    class transactions_proxy_model final : public QSortFilterProxyModel
+    void to_json(nlohmann::json& j, const get_public_key_rpc_request& request)
     {
-      Q_OBJECT
-
-      public:
-        //! Constructor
-        transactions_proxy_model(QObject* parent);
-
-        //! Destructor
-        ~transactions_proxy_model()  final = default;
-
-      protected:
-        //! Override member functions
-        [[nodiscard]] bool lessThan(const QModelIndex& source_left, const QModelIndex& source_right) const final;
-    };
+    
+    }
+    
+    void from_json(const nlohmann::json& json, get_public_key_rpc_result& in)
+    {
+        json.at("public_key").get_to(in.public_key);
+    }
 }
