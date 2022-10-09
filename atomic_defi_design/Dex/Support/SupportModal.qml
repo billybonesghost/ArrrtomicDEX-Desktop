@@ -150,12 +150,6 @@ Network fees can vary greatly depending on your selected trading pair.").arg(API
 
                 FAQLine
                 {
-                    title: qsTr("Who is behind %1?").arg(API.app_name)
-                    text: qsTr("%1 is developed by the Komodo team. Komodo is one of the most established blockchain projects working on innovative solutions like atomic swaps, Delayed Proof of Work, and an interoperable multi-chain architecture.").arg(API.app_name)
-                }
-
-                FAQLine
-                {
                     title: qsTr("Is it possible to develop my own white-label exchange on %1?").arg(API.app_name)
                     text: qsTr("Absolutely! You can read our developer documentation for more details or contact us with your partnership inquiries. Have a specific technical question? The %1 developer community is always ready to help!").arg(API.app_name)
                 }
