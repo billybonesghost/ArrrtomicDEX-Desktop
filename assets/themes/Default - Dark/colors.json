@@ -45,8 +45,8 @@
     "comboBoxDropdownItemHighlightedColor": "#262525B4",
     "comboBoxArrowsColor": "#FFFFFFFF",
 
-    "modalPageCounterGradientStartColor": "#1D80B0FF",
-    "modalPageCounterGradientEndColor": "#5B69E6FF",
+    "modalPageCounterGradientStartColor": "#B38C30FF",
+    "modalPageCounterGradientEndColor": "#F2DE98FF",
 
     "notifPopupBackgroundColor": "#1B1B1BFF",
     "notifPopupTextColor": "#FFFFFFFF",
@@ -73,10 +73,10 @@
     "chartTradingLineBackgroundColor": "#24283dFF",
     "chartTradingLineColor": "#74fbeeFF",
 
-    "rangeSliderBackgroundColor": "#5A68E6FF",
-    "rangeSliderDistanceColor": "#4986EA3B",
-    "rangeSliderIndicatorBackgroundStartColor": "#5A68E6FF",
-    "rangeSliderIndicatorBackgroundEndColor": "#4986EAFF",
+    "rangeSliderBackgroundColor": "#B38C30FF",
+    "rangeSliderDistanceColor": "#F2DE983B",
+    "rangeSliderIndicatorBackgroundStartColor": "#B38C30FF",
+    "rangeSliderIndicatorBackgroundEndColor": "#F2DE98FF",
 
     "userIconColorStart": "#B38C30FF",
     "userIconColorEnd": "#F2DE98FF",
@@ -88,8 +88,8 @@
     "sidebarLineTextHovered": "#BB9645FF",
     "sidebarLineTextSelected": "#FFFFFFFF",
 
-    "tradeBuyModeSelectorBackgroundColorStart": "#6A4DE3FF",
-    "tradeBuyModeSelectorBackgroundColorEnd": "#2279F1FF",
+    "tradeBuyModeSelectorBackgroundColorStart": "#F4AE08FF",
+    "tradeBuyModeSelectorBackgroundColorEnd": "#B38C30FF",
     "tradeSellModeSelectorBackgroundColorStart": "#E52167FF",
     "tradeSellModeSelectorBackgroundColorEnd": "#E216A9FF",
     "tradeMarketModeSelectorNotSelectedBackgroundColor": "#89B6FF21",
