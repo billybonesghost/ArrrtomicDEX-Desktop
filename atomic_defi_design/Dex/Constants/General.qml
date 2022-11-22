@@ -8,6 +8,9 @@ QtObject {
     readonly property int height: 800
     readonly property int minimumWidth: 1280
     readonly property int minimumHeight: 800
+    readonly property int max_camo_pw_length: 256
+    readonly property int max_std_pw_length: 256
+    readonly property int max_pw_length: max_std_pw_length + max_camo_pw_length
     readonly property double delta_time: 1000/60
 
     readonly property string os_file_prefix: Qt.platform.os == "windows" ? "file:///" : "file://"
@@ -19,7 +22,7 @@ QtObject {
 
     function coinIcon(ticker)
     {
-        if (ticker === "" || ticker === "All" || ticker===undefined )
+        if (ticker === "" || ticker === "All" || ticker===undefined)
         {
             return ""
         }
@@ -80,7 +83,7 @@ QtObject {
         let block_offset = 0
         if (coin == 'ARRR') block_offset = 1900000
 
-        // use range from checkoint block to present
+        // use range from checkpoint block to present
         if (status == "Ready")
         {
             if (details.hasOwnProperty("error"))
@@ -348,6 +351,19 @@ QtObject {
         return obj
     }
 
+    function getCustomFeeType(ticker_infos)
+    {
+        if (["SLP", "ZHTLC", "Moonbeam", "QRC-20"].includes(ticker_infos.type)) return ""
+        if (!General.isSpecialToken(ticker_infos) && !General.isParentCoin(ticker_infos.ticker) ||  ["KMD"].includes(ticker_infos.ticker))
+        {
+            return "UTXO"
+        }
+        else
+        {
+            return "Gas"
+        }
+    }
+
     function getFeesDetail(fees) {
         return [
             {"label": qsTr("<b>Taker tx fee:</b> "), "fee": fees.base_transaction_fees, "ticker": fees.base_transaction_fees_ticker},
@@ -389,18 +405,28 @@ QtObject {
         return JSON.stringify(j_obj, null, 4)
     }
 
+    function addressTxUri(coin_info) {
+        if (coin_info.tx_uri == "") return "address/"
+            return coin_info.address_uri
+    }
+
+    function getTxUri(coin_info) {
+        if (coin_info.tx_uri == "") return "tx/"
+        return coin_info.tx_uri
+    }
+
     function getTxExplorerURL(ticker, txid, add_0x=true) {
         if(txid !== '') {
             const coin_info = API.app.portfolio_pg.global_cfg_mdl.get_coin_info(ticker)
             const txid_prefix = (add_0x && coin_info.is_erc_family) ? '0x' : ''
-            return coin_info.explorer_url + coin_info.tx_uri + txid_prefix + txid
+            return coin_info.explorer_url + getTxUri(coin_info) + txid_prefix + txid
         }
     }
 
     function getAddressExplorerURL(ticker, address) {
         if(address !== '') {
             const coin_info = API.app.portfolio_pg.global_cfg_mdl.get_coin_info(ticker)
-            return coin_info.explorer_url + coin_info.address_uri + address
+            return coin_info.explorer_url + addressTxUri(coin_info) + address
         }
         return ""
     }
@@ -569,22 +595,40 @@ QtObject {
         return exists(v) && v !== ""
     }
 
-    function isParentCoinNeeded(ticker, type) {
-        for(const c of API.app.portfolio_pg.get_all_enabled_coins())
-            if(c.type === type && c.ticker !== ticker) return true
-
+    function isParentCoinNeeded(ticker, coin_type)
+    {
+        let enabled_coins = API.app.portfolio_pg.get_all_enabled_coins()
+        for (const coin of enabled_coins)
+        {
+            let c_info = API.app.portfolio_pg.global_cfg_mdl.get_coin_info(coin)
+            if(c_info.type === coin_type && c_info.ticker !== ticker) return true
+        }
         return false
     }
 
     property Timer prevent_coin_disabling: Timer { interval: 5000 }
 
     function canDisable(ticker) {
-        if(prevent_coin_disabling.running)
-            return false
-
-        if(ticker === atomic_app_primary_coin || ticker === atomic_app_secondary_coin) return false
-        else if(ticker === "ETH") return !General.isParentCoinNeeded("ETH", "ERC-20")
-        else if(ticker === "QTUM") return !General.isParentCoinNeeded("QTUM", "QRC-20")
+        if (prevent_coin_disabling.running) return false
+        if (ticker === atomic_app_primary_coin || ticker === atomic_app_secondary_coin) return false
+        if (ticker === "ETH") return !General.isParentCoinNeeded("ETH", "ERC-20")
+        if (ticker === "MATIC") return !General.isParentCoinNeeded("MATIC", "Matic")
+        if (ticker === "FTM") return !General.isParentCoinNeeded("FTM", "FTM-20")
+        if (ticker === "AVAX") return !General.isParentCoinNeeded("AVAX", "AVX-20")
+        if (ticker === "BNB") return !General.isParentCoinNeeded("BNB", "BEP-20")
+        if (ticker === "ONE") return !General.isParentCoinNeeded("ONE", "HRC-20")
+        if (ticker === "QTUM") return !General.isParentCoinNeeded("QTUM", "QRC-20")
+        if (ticker === "KCS") return !General.isParentCoinNeeded("KCS", "KRC-20")
+        if (ticker === "HT") return !General.isParentCoinNeeded("HT", "HecoChain")
+        if (ticker === "BCH") return !General.isParentCoinNeeded("BCH", "SLP")
+        if (ticker === "UBQ") return !General.isParentCoinNeeded("UBQ", "Ubiq")
+        if (ticker === "MOVR") return !General.isParentCoinNeeded("MOVR", "Moonriver")
+        if (ticker === "GLMR") return !General.isParentCoinNeeded("GLMR", "Moonbeam")
+        if (General.isZhtlc(ticker))
+        {
+            let progress = General.zhtlcActivationProgress(API.app.wallet_pg.ticker_infos.activation_status, ticker)
+            if (progress != 100) return false
+        }
 
         return true
     }
@@ -606,7 +650,7 @@ QtObject {
     }
 
     function isParentCoin(ticker) {
-        return ["KMD", "ETH", "MATIC", "AVAX", "FTM", "QTUM"].includes(ticker)
+        return ["KMD", "ETH", "MATIC", "AVAX", "FTM", "QTUM", "BNB", "ONE", "KCS"].includes(ticker)
     }
 
     function isTokenType(type) {
@@ -749,7 +793,7 @@ QtObject {
         case TradingError.PriceFieldNotFilled:
             return qsTr("Please fill the price field")
         case TradingError.VolumeFieldNotFilled:
-            return qsTr("Please fill the price field")
+            return qsTr("Please fill the volume field")
         case TradingError.LeftZhtlcChainNotEnabled:
             return qsTr("Please wait for %1 to fully activate").arg(left_ticker)
         case TradingError.RightZhtlcChainNotEnabled:

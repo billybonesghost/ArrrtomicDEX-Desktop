@@ -34,6 +34,7 @@
 #include "atomicdex/api/mm2/rpc2.init_z_coin.hpp"
 #include "atomicdex/api/mm2/rpc2.init_z_coin_status.hpp"
 #include "atomicdex/config/mm2.cfg.hpp"
+#include "atomicdex/config/coins.cfg.hpp"
 #include "atomicdex/constants/dex.constants.hpp"
 #include "atomicdex/managers/qt.wallet.manager.hpp"
 #include "atomicdex/services/internet/internet.checker.service.hpp"
@@ -132,6 +133,11 @@ namespace
         {
             return;
         }
+        if (tickers.empty())
+        {
+            SPDLOG_DEBUG("Tickers list empty, skipping update_coin_status");
+            return;
+        }
         SPDLOG_INFO("Update coins status to: {} - field_name: {} - tickers: {}", status, field_name, fmt::join(tickers, ", "));
         fs::path    cfg_path               = atomic_dex::utils::get_atomic_dex_config_folder();
         std::string filename               = std::string(atomic_dex::get_raw_version()) + "-coins." + wallet_name + ".json";
@@ -198,6 +204,7 @@ namespace
             ofs_custom.write(QString::fromStdString(custom_cfg_data.dump()).toUtf8());
             ofs_custom.close();
         }
+        SPDLOG_DEBUG("Coins file updated to set {}: {} | tickers: [{}]", field_name, status,  fmt::join(tickers, ", "));
     }
 }
 
@@ -224,7 +231,18 @@ namespace atomic_dex
                     ifs.setFileName(atomic_dex::std_path_to_qstring(path));
                     ifs.open(QIODevice::ReadOnly | QIODevice::Text);
                     nlohmann::json config_json_data = nlohmann::json::parse(QString(ifs.readAll()).toStdString());
-                    auto           res              = config_json_data.get<std::unordered_map<std::string, atomic_dex::coin_config>>();
+
+                    //! Iterate through config
+                    for (auto& [key, value]: config_json_data.items())
+                    {
+                        //! Ensure default coin are marked as active
+                        if (is_default_coin(key))
+                        {
+                            config_json_data.at(key)["active"] = true;
+                        }
+                    }
+
+                    auto res = config_json_data.get<std::unordered_map<std::string, atomic_dex::coin_config>>();
                     return res;
                 }
                 catch (const std::exception& error)
@@ -232,6 +250,7 @@ namespace atomic_dex
                     SPDLOG_ERROR("exception caught: {}", error.what());
                 }
             }
+            SPDLOG_DEBUG("Coins file does not exist!");
             return {};
         };
 
@@ -417,21 +436,20 @@ namespace atomic_dex
     bool mm2_service::disable_coin(const std::string& ticker, std::error_code& ec)
     {
         coin_config coin_info = get_coin_info(ticker);
-
         if (not coin_info.currently_enabled)
         {
+            SPDLOG_DEBUG("[mm2_service::disable_coin]: {} not currently_enabled", ticker);
             return true;
         }
 
         t_disable_coin_request request{.coin = ticker};
 
         auto                   answer = m_mm2_client.rpc_disable_coin(std::move(request));
-        SPDLOG_INFO("mm2_service::disable_coin: {} result: {}", ticker, answer.raw_result);
+        SPDLOG_DEBUG("mm2_service::disable_coin: {} result: {}", ticker, answer.raw_result);
 
         if (answer.error.has_value())
         {
             std::string error = answer.error.value();
-            SPDLOG_INFO("mm2_service::disable_coin: {} error {}", ticker, error);
             if (error.find("such coin") != std::string::npos)
             {
                 ec = dextop_error::disable_unknown_coin;
@@ -465,7 +483,7 @@ namespace atomic_dex
         
         enable_coins(coins);
         batch_fetch_orders_and_swap();
-
+        this->dispatcher_.trigger<default_coins_enabled>();
         return result.load() == 1;
     }
 
@@ -489,7 +507,6 @@ namespace atomic_dex
         }
         coins.erase(std::unique(coins.begin(), coins.end(), [](auto left, auto right) { return left.ticker == right.ticker; }), coins.end()); // Remove duplicates
         enable_coins(coins);
-        update_coin_status(this->m_current_wallet_name, tickers, true, m_coins_informations, m_coin_cfg_mutex);
     }
 
     void mm2_service::enable_coins(const t_coins& coins)
@@ -568,7 +585,9 @@ namespace atomic_dex
                 
                 if (answers.count("error") == 0)
                 {
-                    std::size_t idx = 0;
+                    std::size_t                     idx = 0;
+                    t_coins                         activated_coins;
+                    t_coins                         failed_coins;
                     
                     for (auto&& answer : answers)
                     {
@@ -578,22 +597,49 @@ namespace atomic_dex
                             SPDLOG_DEBUG(
                                 "bad answer for: [{}] -> removing it from enabling, idx: {}, tickers size: {}, answers size: {}", coins[idx].ticker, idx,
                                 coins.size(), answers.size());
-                            this->dispatcher_.trigger<enabling_coin_failed>(coins[idx].ticker, error);
+                            if (error.find("already initialized") != std::string::npos)
+                            {
+                                SPDLOG_INFO("{} {}: ", coins[idx].ticker, error);
+                                activated_coins.push_back(std::move(coins[idx]));
+                            }
+                            else
+                            {
+                                failed_coins.push_back(std::move(coins[idx]));
+                                this->dispatcher_.trigger<enabling_coin_failed>(coins[idx].ticker, error);
+                                SPDLOG_ERROR(error);
+                            }
                         }
-                        if (res)
+                        else
                         {
-                            dispatcher_.trigger<coin_fully_initialized>(coin_fully_initialized{.tickers = {coins[idx].ticker}});
+                            activated_coins.push_back(std::move(coins[idx]));
                             this->process_balance_answer(answer);
-                            fetch_single_balance(coins[idx]);
                         }
                         idx += 1;
                     }
+                    std::vector<std::string> tickers;
+                    for (auto&& coin: activated_coins)
+                    {
+                        m_coins_informations[coin.ticker].currently_enabled = true;
+                        tickers.push_back(coin.ticker);
+                        fetch_single_balance(coin);
+                    }
+                    dispatcher_.trigger<coin_fully_initialized>(tickers);
+
+                    std::vector<std::string> failed_tickers;
+                    for (auto&& coin: failed_coins)
+                    {
+                        m_coins_informations[coin.ticker].currently_enabled = false;
+                        failed_tickers.push_back(coin.ticker);
+                    }
+                    update_coin_active(failed_tickers, false);
+                    fetch_infos_thread(false, false);
                 }
             }
             catch (const std::exception& error)
             {
                 SPDLOG_ERROR(error.what());
             }
+            this->m_nb_update_required += 1;
         };
         
         for (const auto& coin_config : coins)
@@ -601,7 +647,7 @@ namespace atomic_dex
             t_enable_request request
             {
                 .coin_name       = coin_config.ticker,
-                .urls            = coin_config.urls.value_or(std::vector<std::string>{}),
+                .urls            = coin_config.eth_family_urls.value_or(std::vector<std::string>{}),
                 .coin_type       = coin_config.coin_type,
                 .is_testnet      = coin_config.is_testnet.value_or(false),
                 .with_tx_history = false
@@ -621,6 +667,11 @@ namespace atomic_dex
         enable_utxo_qrc20_coins(t_coins{std::move(coin_config)});
     }
 
+    void mm2_service::update_coin_active(const std::vector<std::string>& tickers, bool status)
+    {
+        update_coin_status(this->m_current_wallet_name, tickers, status, m_coins_informations, m_coin_cfg_mutex);
+    }
+
     void mm2_service::enable_utxo_qrc20_coins(const t_coins& coins)
     {
         auto batch_array = nlohmann::json::array();
@@ -633,6 +684,8 @@ namespace atomic_dex
                 if (answers.count("error") == 0)
                 {
                     std::size_t                     idx = 0;
+                    t_coins                         activated_coins;
+                    t_coins                         failed_coins;
                     
                     for (auto&& answer : answers)
                     {
@@ -642,22 +695,50 @@ namespace atomic_dex
                             SPDLOG_DEBUG(
                                 "bad answer for: [{}] -> removing it from enabling, idx: {}, tickers size: {}, answers size: {}", coins[idx].ticker, idx,
                                 coins.size(), answers.size());
-                            this->dispatcher_.trigger<enabling_coin_failed>(coins[idx].ticker, error);
+                            if (error.find("already initialized") != std::string::npos)
+                            {
+                                SPDLOG_INFO("{} {}: ", coins[idx].ticker, error);
+                                activated_coins.push_back(std::move(coins[idx]));
+                            }
+                            else
+                            {
+                                failed_coins.push_back(std::move(coins[idx]));
+                                this->dispatcher_.trigger<enabling_coin_failed>(coins[idx].ticker, error);
+                                SPDLOG_ERROR(error);
+                            }
                         }
-                        if (res)
+                        else
                         {
-                            dispatcher_.trigger<coin_fully_initialized>(coin_fully_initialized{.tickers = {coins[idx].ticker}});
                             this->process_balance_answer(answer);
-                            fetch_single_balance(coins[idx]);
+                            activated_coins.push_back(std::move(coins[idx]));
                         }
                         idx += 1;
                     }
+
+                    std::vector<std::string> tickers;
+                    for (auto&& coin: activated_coins)
+                    {
+                        m_coins_informations[coin.ticker].currently_enabled = true;
+                        tickers.push_back(coin.ticker);
+                        fetch_single_balance(coin);
+                    }
+                    dispatcher_.trigger<coin_fully_initialized>(tickers);
+
+                    std::vector<std::string> failed_tickers;
+                    for (auto&& coin: failed_coins)
+                    {
+                        m_coins_informations[coin.ticker].currently_enabled = false;
+                        failed_tickers.push_back(coin.ticker);
+                    }
+                    update_coin_active(failed_tickers, false);
+                    fetch_infos_thread(false, false);
                 }
             }
             catch (const std::exception& error)
             {
                 SPDLOG_ERROR(error.what());
             }
+            this->m_nb_update_required += 1;
         };
         
         for (const auto& coin_config : coins)
@@ -705,8 +786,29 @@ namespace atomic_dex
         {
             if (rpc.error)
             {
-                SPDLOG_ERROR(rpc.error->error);
-                this->dispatcher_.trigger<enabling_coin_failed>(rpc.request.ticker, rpc.error->error);
+                if (rpc.error->error_type.find("PlatformIsAlreadyActivated") != std::string::npos || rpc.error->error_type.find("TokenIsAlreadyActivated") != std::string::npos)
+                {
+                    SPDLOG_ERROR("{} {}: ", rpc.request.ticker, rpc.error->error_type);
+                    fetch_single_balance(get_coin_info(rpc.request.ticker));
+                    m_coins_informations[rpc.request.ticker].currently_enabled = true;
+                    dispatcher_.trigger<coin_fully_initialized>(coin_fully_initialized{.tickers = {rpc.request.ticker}});
+                    if constexpr (std::is_same_v<RpcRequest, mm2::enable_bch_with_tokens_rpc>)
+                    {
+                        for (const auto& slp_coin_info : rpc.request.slp_tokens_requests)
+                        {
+                            SPDLOG_ERROR("{} {}: ", slp_coin_info.ticker, rpc.error->error_type);
+                            fetch_single_balance(get_coin_info(slp_coin_info.ticker));
+                            m_coins_informations[slp_coin_info.ticker].currently_enabled = true;
+                            dispatcher_.trigger<coin_fully_initialized>(coin_fully_initialized{.tickers = {slp_coin_info.ticker}});
+                        }
+                    }
+                }
+                else
+                {
+                    m_coins_informations[rpc.request.ticker].currently_enabled = false;
+                    update_coin_active({rpc.request.ticker}, false);
+                    this->dispatcher_.trigger<enabling_coin_failed>(rpc.request.ticker, rpc.error->error);
+                }
             }
             else
             {
@@ -725,9 +827,11 @@ namespace atomic_dex
                         }
                     }
                 }
+                process_balance_answer(rpc);
             }
+            this->m_nb_update_required += 1;
         };
-        
+
         if (!has_coin(bch_ticker))
         {
             static constexpr auto error = "{} is not present in the config. Cannot enable SLP tokens.";
@@ -771,6 +875,7 @@ namespace atomic_dex
             m_mm2_client.process_rpc_async<mm2::enable_bch_with_tokens_rpc>(rpc.request, callback);
         }
     }
+
     
     void mm2_service::enable_slp_testnet_coin(coin_config coin_config)
     {
@@ -784,12 +889,34 @@ namespace atomic_dex
         {
             if (rpc.error)
             {
-                SPDLOG_ERROR(rpc.error->error);
-                this->dispatcher_.trigger<enabling_coin_failed>(rpc.request.ticker, rpc.error->error);
+                if (rpc.error->error_type.find("PlatformIsAlreadyActivated") != std::string::npos || rpc.error->error_type.find("TokenIsAlreadyActivated") != std::string::npos)
+                {
+                    SPDLOG_ERROR("{} {}: ", rpc.request.ticker, rpc.error->error_type);
+                    fetch_single_balance(get_coin_info(rpc.request.ticker));
+                    m_coins_informations[rpc.request.ticker].currently_enabled = true;
+                    dispatcher_.trigger<coin_fully_initialized>(coin_fully_initialized{.tickers = {rpc.request.ticker}});
+                    if constexpr (std::is_same_v<RpcRequest, mm2::enable_bch_with_tokens_rpc>)
+                    {
+                        for (const auto& slp_coin_info : rpc.request.slp_tokens_requests)
+                        {
+                            SPDLOG_ERROR("{} {}: ", slp_coin_info.ticker, rpc.error->error_type);
+                            fetch_single_balance(get_coin_info(slp_coin_info.ticker));
+                            m_coins_informations[slp_coin_info.ticker].currently_enabled = true;
+                            dispatcher_.trigger<coin_fully_initialized>(coin_fully_initialized{.tickers = {slp_coin_info.ticker}});
+                        }
+                    }
+                }
+                else
+                {
+                    m_coins_informations[rpc.request.ticker].currently_enabled = false;
+                    update_coin_active({rpc.request.ticker}, false);
+                    this->dispatcher_.trigger<enabling_coin_failed>(rpc.request.ticker, rpc.error->error);
+                }
             }
             else
             {
                 dispatcher_.trigger<coin_fully_initialized>(coin_fully_initialized{.tickers = {rpc.request.ticker}});
+                fetch_single_balance(get_coin_info(rpc.request.ticker));
                 m_coins_informations[rpc.request.ticker].currently_enabled = true;
                 if constexpr (std::is_same_v<RpcRequest, mm2::enable_bch_with_tokens_rpc>)
                 {
@@ -798,12 +925,14 @@ namespace atomic_dex
                         for (const auto& balance : slp_address_info.second.balances)
                         {
                             dispatcher_.trigger<coin_fully_initialized>(coin_fully_initialized{.tickers = {balance.first}});
+                            process_balance_answer(rpc);
                             m_coins_informations[balance.first].currently_enabled = true;
                         }
                     }
                 }
                 process_balance_answer(rpc);
             }
+            this->m_nb_update_required += 1;
         };
         
         if (!has_coin(bch_ticker))
@@ -868,7 +997,6 @@ namespace atomic_dex
     void mm2_service::process_balance_answer(const mm2::enable_bch_with_tokens_rpc& rpc)
     {
         const auto& answer = rpc.result.value();
-        
         {
             mm2::balance_answer balance_answer;
             
@@ -1094,11 +1222,6 @@ namespace atomic_dex
 
         auto answer_functor = [this](nlohmann::json batch, std::vector<std::string> tickers)
         {
-//            auto rpc_answer_functor = [this, tickers](web::http::http_response resp) mutable { this->batch_enable_answer(resp, tickers); };
-//
-//            auto error_rpc_functor = [this, tickers, batch](pplx::task<void> previous_task)
-//            { this->handle_exception_pplx_task(previous_task, "batch_enable_coins legacy electrum", batch); };
-
             m_mm2_client.async_rpc_batch_standalone(batch)
                 .then(
                     [this, tickers](web::http::http_response resp) mutable
@@ -1120,11 +1243,21 @@ namespace atomic_dex
                                         SPDLOG_DEBUG(
                                             "bad answer for: [{}] -> removing it from enabling, idx: {}, tickers size: {}, answers size: {}", tickers[idx], idx,
                                             tickers.size(), answers.size());
-                                        this->dispatcher_.trigger<enabling_coin_failed>(tickers[idx], error);
-                                        to_remove.emplace(tickers[idx]);
-                                        if (error.find("already initialized") == std::string::npos)
+                                        if (error.find("CoinIsAlreadyActivated") != std::string::npos)
                                         {
-                                            SPDLOG_WARN("Should set to false the active field in cfg for: {} - reason: {}", tickers[idx], error);
+                                            SPDLOG_ERROR(error);
+                                            SPDLOG_DEBUG("{} activation complete!", tickers[idx]);
+                                            std::unique_lock lock(m_coin_cfg_mutex);
+                                            m_coins_informations[tickers[idx]].currently_enabled = true;
+                                            this->m_nb_update_required += 1;
+                                            this->dispatcher_.trigger<coin_fully_initialized>(coin_fully_initialized{.tickers = {tickers[idx]}});
+                                            this->dispatcher_.trigger<enabling_z_coin_status>(tickers[idx], "Complete!");
+                                        }
+                                        else
+                                        {
+                                            SPDLOG_ERROR(error);
+                                            to_remove.emplace(tickers[idx]);
+                                            this->dispatcher_.trigger<enabling_coin_failed>(tickers[idx], error);
                                         }
                                     }
                                     else if (answer.contains("result"))
@@ -1153,9 +1286,7 @@ namespace atomic_dex
                                                     web::http::http_response             z_resp      = z_resp_task.get();
                                                     auto                                 z_answers   = mm2::basic_batch_answer(z_resp);
                                                     z_error                                          = z_answers;
-                                                    std::vector<std::string>             this_ticker;
-                                                    this_ticker.push_back(tickers[idx]);
-                                                    // SPDLOG_DEBUG("z_answer: {}", z_answers[0].dump(4));
+
                                                     std::string status = z_answers[0].at("result").at("status").get<std::string>();
 
                                                     if (status == "Ready")
@@ -1163,6 +1294,13 @@ namespace atomic_dex
                                                         m_coins_informations[tickers[idx]].activation_status = z_answers[0];
                                                         if (z_answers[0].at("result").at("details").contains("error"))
                                                         {
+                                                            if (z_answers[0].at("result").at("details").at("error").contains("error_type"))
+                                                            {
+                                                                if (z_answers[0].at("result").at("details").at("error").at("error_type") == "CoinIsAlreadyActivated")
+                                                                {
+                                                                    continue;
+                                                                }
+                                                            }
                                                             event = z_answers[0].at("result").at("details").at("error").get<std::string>();
                                                             SPDLOG_DEBUG("Enabling [{}] error: {}", tickers[idx], event);
                                                             break;
@@ -1171,12 +1309,14 @@ namespace atomic_dex
                                                         std::unique_lock lock(m_coin_cfg_mutex);
                                                         m_coins_informations[tickers[idx]].currently_enabled = true;
 
-                                                        dispatcher_.trigger<coin_fully_initialized>(this_ticker);
+                                                        dispatcher_.trigger<coin_fully_initialized>(coin_fully_initialized{.tickers = {tickers[idx]}});
                                                         this->m_nb_update_required += 1;
                                                         break;
                                                     }
                                                     else
                                                     {
+                                                        // todo(syl): many unused variables.
+                                                        // fix that
                                                         if (z_answers[0].at("result").at("details").contains("UpdatingBlocksCache"))
                                                         {
                                                             event = "UpdatingBlocksCache";
@@ -1195,6 +1335,8 @@ namespace atomic_dex
                                                         {
                                                             event = z_answers[0].at("result").at("details").get<std::string>();
                                                             // SPDLOG_DEBUG("Waiting for {} to enable [{}: {}]...", tickers[idx], status, event);
+                                                            // Do we need to handle this? Happens when running init_zcoin_enable twice
+                                                            // {"mmrpc":"2.0","result":{"status":"InProgress","details":{"TemporaryError":"z_rpc:387] UNIQUE constraint failed: blocks.height"}},"id":null}
                                                         }
 
                                                         if (event != last_event)
@@ -1207,12 +1349,14 @@ namespace atomic_dex
                                                                 std::unique_lock lock(m_coin_cfg_mutex);
                                                                 m_coins_informations[tickers[idx]].currently_enabled = true;
 
-                                                                dispatcher_.trigger<coin_fully_initialized>(this_ticker);
+                                                                dispatcher_.trigger<coin_fully_initialized>(coin_fully_initialized{.tickers = {tickers[idx]}});
                                                                 this->m_nb_update_required += 1;
                                                             }
                                                             this->dispatcher_.trigger<enabling_z_coin_status>(tickers[idx], event);
                                                             last_event = event;
                                                         }
+
+                                                        // todo(syl): refactor to a background task
                                                         std::this_thread::sleep_for(2s);
                                                     }
                                                     m_coins_informations[tickers[idx]].activation_status = z_answers[0];
@@ -1233,15 +1377,6 @@ namespace atomic_dex
                                                         this->dispatcher_.trigger<enabling_z_coin_status>(tickers[idx], event);
                                                         this->dispatcher_.trigger<enabling_coin_failed>(tickers[idx], z_error[0].dump(4));
                                                         to_remove.emplace(tickers[idx]);
-
-                                                        if (error.find("already initialized") == std::string::npos)
-                                                        {
-                                                            SPDLOG_WARN("Should set to false the active field in cfg for: {} - reason: {}", tickers[idx], zhtlc_error);
-                                                        }
-                                                        else
-                                                        {
-                                                            update_coin_status(this->m_current_wallet_name, tickers, false, m_coins_informations, m_coin_cfg_mutex);
-                                                        }
                                                     }
                                                     else if (z_nb_try == 1000)
                                                     {
@@ -1279,17 +1414,12 @@ namespace atomic_dex
 
                                 if (!tickers.empty())
                                 {
-                                    if (tickers == g_default_coins)
-                                    {
-                                        this->dispatcher_.trigger<default_coins_enabled>();
-                                        batch_balance_and_tx(false, tickers, true);
-                                    }
                                     dispatcher_.trigger<coin_fully_initialized>(tickers);
                                     if (tickers.size() == 1)
                                     {
                                         fetch_single_balance(get_coin_info(tickers[0]));
                                     }
-                                    // batch_balance_and_tx(false, tickers, true);
+                                    this->m_nb_update_required += 1;
                                 }
                             }
                         }
@@ -1307,6 +1437,7 @@ namespace atomic_dex
                         update_coin_status(this->m_current_wallet_name, tickers, false, m_coins_informations, m_coin_cfg_mutex);
                     });
             dispatcher_.trigger<zhtlc_leave_enabling>();
+            this->m_nb_update_required += 1;
         };
 
         for (auto&& coin: coins)
@@ -1420,10 +1551,22 @@ namespace atomic_dex
             auto answer        = mm2::basic_batch_answer(resp);
             if (answer.is_array())
             {
+                if (answer.size() < 1)
+                {
+                    SPDLOG_ERROR("Answer array did not contain enough elements");
+                    return;
+                }
+
                 auto orderbook_answer = mm2::rpc_process_answer_batch<t_orderbook_answer>(answer[0], "orderbook");
 
                 if (is_a_reset)
                 {
+                    if (answer.size() < 5)
+                    {
+                        SPDLOG_ERROR("Answer array did not contain enough elements");
+                        return;
+                    }
+
                     auto base_max_taker_vol_answer = mm2::rpc_process_answer_batch<mm2::max_taker_vol_answer>(answer[1], "max_taker_vol");
                     if (base_max_taker_vol_answer.rpc_result_code == 200)
                     {
@@ -1523,7 +1666,6 @@ namespace atomic_dex
     void
     mm2_service::fetch_infos_thread(bool is_a_refresh, bool only_tx)
     {
-        SPDLOG_INFO("fetch_infos_thread");
         if (only_tx)
         {
             batch_balance_and_tx(is_a_refresh, {}, false, only_tx);
@@ -1931,7 +2073,7 @@ namespace atomic_dex
 
         if (this->m_mm2_running)
         {
-            SPDLOG_INFO("process_orderbook(true)");
+            SPDLOG_DEBUG("process_orderbook(true)");
             process_orderbook(true);
         }
     }
@@ -2162,10 +2304,9 @@ namespace atomic_dex
         }
         t_float_50 result = t_float_50(answer_r.balance) * m_balance_factor;
         answer_r.balance  = result.str(8, std::ios_base::fixed);
-        
+
         {
             std::unique_lock lock(m_balance_mutex);
-            
             m_balance_informations[answer_r.coin] = std::move(answer_r);
         }
     }
