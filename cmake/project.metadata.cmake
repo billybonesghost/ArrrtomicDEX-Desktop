@@ -2,9 +2,9 @@
 set(DEX_API "mm2")
 set(DEX_RPCPORT 7888)
 set(DEX_RPC "http://127.0.0.1:7888")
-set(DEX_PROJECT_NAME "Arrrtomicdex-desktop")
-set(DEX_DISPLAY_NAME "ArrrtomicDEX Desktop")
-set(DEX_MAINTENANCE_TOOL_NAME "ArrrtomicDEX Maintenance Tool")
+set(DEX_PROJECT_NAME "PirateDEX-desktop")
+set(DEX_DISPLAY_NAME "PirateDEX Desktop")
+set(DEX_MAINTENANCE_TOOL_NAME "PirateDEX Maintenance Tool")
 set(DEX_COMPANY "Pirate")
 set(DEX_WEBSITE "https://pirate.black/")
 set(DEX_SUPPORT_PAGE "https://pirate.black/frequently-asked-questions")
@@ -14,10 +14,10 @@ set(DEX_PRIMARY_COIN "ARRR")                                                    
 set(DEX_SECOND_PRIMARY_COIN "KMD")                                                   ## Second main coin of the DEX, will be enabled by default and will be the default right ticker for trading
 option(DISABLE_GEOBLOCKING "Enable to disable geoblocking (for dev purpose)" OFF)
 set(DEX_REPOSITORY_OWNER ${DEX_COMPANY})
-set(DEX_REPOSITORY_NAME "ArrrtomicDEX-Desktop")
+set(DEX_REPOSITORY_NAME "PirateDEX-Desktop")
 set(DEX_CHECKSUM_API_URL "https://komodo.live/static/checksum.json")
 if (APPLE)
-    set(DEX_APPDATA_FOLDER "ArrrtomicDex Desktop")
+    set(DEX_APPDATA_FOLDER "PirateDEX Desktop")
 else ()
     set(DEX_APPDATA_FOLDER "arrrtomic_qt")
 endif ()
@@ -93,10 +93,10 @@ macro(generate_macos_metafiles)
 
     configure_file(${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/osx/config/config.xml.in
             ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/osx/config/config.xml)
-    configure_file(${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/osx/packages/com.pirate.arrrtomicdex/meta/package.xml.in
-            ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/osx/packages/com.pirate.arrrtomicdex/meta/package.xml)
-    configure_file(${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/osx/packages/com.pirate.arrrtomicdex/meta/installscript.qs.in
-            ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/osx/packages/com.pirate.arrrtomicdex/meta/installscript.qs)
+    configure_file(${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/osx/packages/com.pirate.piratedex/meta/package.xml.in
+            ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/osx/packages/com.pirate.piratedex/meta/package.xml)
+    configure_file(${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/osx/packages/com.pirate.piratedex/meta/installscript.qs.in
+            ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/osx/packages/com.pirate.piratedex/meta/installscript.qs)
 
     configure_file(${CMAKE_CURRENT_LIST_DIR}/assets/logo/dex-logo.icns ${CMAKE_CURRENT_LIST_DIR}/cmake/install/macos/dex-logo.icns COPYONLY)
     configure_file(${CMAKE_CURRENT_LIST_DIR}/assets/logo/dex-logo.icns ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/osx/config/install_icon.icns COPYONLY)               # Configures MacOS logo for the installer
@@ -113,14 +113,14 @@ macro(generate_windows_metafiles)
 
     configure_file(${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/config/config.xml.in
             ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/config/config.xml)
-    configure_file(${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.arrrtomicdex/meta/package.xml.in
-            ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.arrrtomicdex/meta/package.xml)
-    configure_file(${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.arrrtomicdex/meta/installscript.qs.in
-            ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.arrrtomicdex/meta/installscript.qs)
-    configure_file(${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.arrrtomicdex/dex.exe.manifest.in
-            ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.arrrtomicdex/data/${DEX_PROJECT_NAME}.exe.manifest)
+    configure_file(${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.piratedex/meta/package.xml.in
+            ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.piratedex/meta/package.xml)
+    configure_file(${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.piratedex/meta/installscript.qs.in
+            ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.piratedex/meta/installscript.qs)
+    configure_file(${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.piratedex/dex.exe.manifest.in
+            ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.piratedex/data/${DEX_PROJECT_NAME}.exe.manifest)
     configure_file(${CMAKE_CURRENT_LIST_DIR}/assets/logo/dex-logo.ico
-            ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.arrrtomicdex/data/${DEX_PROJECT_NAME}.ico
+            ${CMAKE_SOURCE_DIR}/ci_tools_atomic_dex/installer/windows/packages/com.pirate.piratedex/data/${DEX_PROJECT_NAME}.ico
             COPYONLY)
 
     configure_file(${CMAKE_CURRENT_LIST_DIR}/assets/logo/dex-logo.ico ${CMAKE_CURRENT_LIST_DIR}/cmake/install/windows/dex-logo.ico COPYONLY)

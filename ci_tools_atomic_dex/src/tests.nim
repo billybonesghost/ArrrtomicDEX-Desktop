@@ -38,7 +38,7 @@ proc run_tests*(build_type: string, osx_sdk_path: string, compiler_path: string)
    
      when defined(linux):
         echo os.getCurrentDir()
-        os.setCurrentDir(os.getCurrentDir().joinPath("bin").joinPath("ArrrtomicDEXTestsAppDir").joinPath("usr").joinPath("bin"))
+        os.setCurrentDir(os.getCurrentDir().joinPath("bin").joinPath("PirateDEXTestsAppDir").joinPath("usr").joinPath("bin"))
         echo "Running AtomicDex Pro Unit tests"
         discard osproc.execCmd("./" & os.getEnv("DEX_PROJECT_NAME") & "_tests --reporters=xml --out=" & os.getEnv("DEX_PROJECT_NAME") & "-tests-result.xml -s")
         echo "Successfully Generated", os.getEnv("DEX_PROJECT_NAME"), "-tests-result.xml"

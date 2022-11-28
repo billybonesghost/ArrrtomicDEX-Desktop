@@ -1,4 +1,4 @@
-name: ArrrtomicDex-Desktop CI
+name: PirateDEX-Desktop CI
 
 on:
   pull_request:
@@ -13,8 +13,8 @@ env:
   DEX_API: "mm2-x"
   DEX_RPCPORT: 7888
   DEX_RPC: "http://127.0.0.1:7888"
-  DEX_PROJECT_NAME: "arrrtomicdex-desktop"
-  DEX_DISPLAY_NAME: "ArrrtomicDex Desktop"
+  DEX_PROJECT_NAME: "PirateDEX-desktop"
+  DEX_DISPLAY_NAME: "PirateDEX Desktop"
   DEX_COMPANY: "Pirate"
   DEX_WEBSITE: "https://pirate.black/"
 
@@ -218,7 +218,7 @@ jobs:
 
 
 
-      - name: Build ArrrtomicDEX (MacOS)
+      - name: Build PirateDEX (MacOS)
         if: runner.os == 'macOS'
         run: |
           export QT_INSTALL_CMAKE_PATH=${{ github.workspace }}/Qt/${{ matrix.qt }}/clang_64/lib/cmake
@@ -231,7 +231,7 @@ jobs:
           ./ci_tools_atomic_dex bundle ${{ matrix.type }} --osx_sdk=$HOME/sdk/MacOSX10.14.sdk --compiler=clang++
 
 
-      - name: Build ArrrtomicDEX (Linux)
+      - name: Build PirateDEX (Linux)
         if: runner.os == 'Linux'
         run: |
           export QT_INSTALL_CMAKE_PATH=${{ github.workspace }}/Qt/${{ matrix.qt }}/gcc_64/lib/cmake
@@ -249,7 +249,7 @@ jobs:
           ./ci_tools_atomic_dex bundle ${{ matrix.type }}
 
 
-      - name: Build ArrrtomicDEX (Windows)
+      - name: Build PirateDEX (Windows)
         if: runner.os == 'Windows'
         shell: powershell
         run: |

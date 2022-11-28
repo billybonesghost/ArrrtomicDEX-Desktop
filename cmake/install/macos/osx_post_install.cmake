@@ -88,7 +88,7 @@ if (NOT EXISTS ${CMAKE_SOURCE_DIR}/bin/${DEX_PROJECT_NAME}.dmg)
             ECHO_OUTPUT_VARIABLE
             ECHO_ERROR_VARIABLE)
 
-    execute_process(COMMAND ${PROJECT_ROOT_DIR}/cmake/install/macos/macos_notarize.sh --asc-public-id=$ENV{ASC_PUBLIC_ID} --app-specific-password=$ENV{APPLE_ATOMICDEX_PASSWORD} --apple-id=$ENV{APPLE_ID} --primary-bundle-id=com.pirate.arrrtomicdex --target-binary=${CMAKE_SOURCE_DIR}/bin/${DEX_PROJECT_NAME}.dmg
+    execute_process(COMMAND ${PROJECT_ROOT_DIR}/cmake/install/macos/macos_notarize.sh --asc-public-id=$ENV{ASC_PUBLIC_ID} --app-specific-password=$ENV{APPLE_ATOMICDEX_PASSWORD} --apple-id=$ENV{APPLE_ID} --primary-bundle-id=com.pirate.piratedex --target-binary=${CMAKE_SOURCE_DIR}/bin/${DEX_PROJECT_NAME}.dmg
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
             ECHO_OUTPUT_VARIABLE
             ECHO_ERROR_VARIABLE)
@@ -126,7 +126,7 @@ execute_process(COMMAND codesign --deep --force -v -s "$ENV{MAC_SIGN_IDENTITY}" 
         ECHO_OUTPUT_VARIABLE
         ECHO_ERROR_VARIABLE)
 
-execute_process(COMMAND ${PROJECT_ROOT_DIR}/cmake/install/macos/macos_notarize.sh --asc-public-id=$ENV{ASC_PUBLIC_ID} --app-specific-password=$ENV{APPLE_ATOMICDEX_PASSWORD} --apple-id=$ENV{APPLE_ID} --primary-bundle-id=com.pirate.arrrtomicdex --target-binary=${PROJECT_ROOT_DIR}/ci_tools_atomic_dex/installer/osx/${DEX_PROJECT_NAME}_installer.app
+execute_process(COMMAND ${PROJECT_ROOT_DIR}/cmake/install/macos/macos_notarize.sh --asc-public-id=$ENV{ASC_PUBLIC_ID} --app-specific-password=$ENV{APPLE_ATOMICDEX_PASSWORD} --apple-id=$ENV{APPLE_ID} --primary-bundle-id=com.pirate.piratedex --target-binary=${PROJECT_ROOT_DIR}/ci_tools_atomic_dex/installer/osx/${DEX_PROJECT_NAME}_installer.app
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         ECHO_OUTPUT_VARIABLE
         ECHO_ERROR_VARIABLE)

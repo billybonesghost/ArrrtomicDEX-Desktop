@@ -14,7 +14,7 @@ if (EXISTS ${PROJECT_ROOT_DIR}/build-Release OR EXISTS ${PROJECT_ROOT_DIR}/build
 endif ()
 
 set(PROJECT_QML_DIR ${PROJECT_ROOT_DIR}/atomic_defi_design/Dex)
-set(PROJECT_APP_DIR ArrrtomicDEXAppDir)
+set(PROJECT_APP_DIR PirateDEXAppDir)
 set(PROJECT_APP_PATH ${CMAKE_SOURCE_DIR}/bin/${PROJECT_APP_DIR})
 set(PROJECT_BIN_PATH ${PROJECT_APP_PATH}/usr/bin/${DEX_PROJECT_NAME})
 set(PROJECT_LIB_PATH ${PROJECT_APP_PATH}/usr/lib)
@@ -73,12 +73,12 @@ file(RENAME ${CMAKE_SOURCE_DIR}/${DEX_PROJECT_NAME}-${VERSION_ID}-x86_64.AppImag
 
 message(STATUS "Copying ${PROJECT_APP_PATH} to ${TARGET_APP_PATH}/${PROJECT_APP_DIR}")
 file(COPY ${PROJECT_APP_PATH} DESTINATION ${TARGET_APP_PATH})
-execute_process(COMMAND zip -r ${DEX_PROJECT_NAME}-linux-${VERSION_ID}.zip ArrrtomicDEXAppDir
+execute_process(COMMAND zip -r ${DEX_PROJECT_NAME}-linux-${VERSION_ID}.zip PirateDEXAppDir
         WORKING_DIRECTORY ${TARGET_APP_PATH}
         ECHO_OUTPUT_VARIABLE
         ECHO_ERROR_VARIABLE)
 
-execute_process(COMMAND tar --zstd -cf ${DEX_PROJECT_NAME}-linux-${VERSION_ID}.tar.zst ArrrtomicDEXAppDir
+execute_process(COMMAND tar --zstd -cf ${DEX_PROJECT_NAME}-linux-${VERSION_ID}.tar.zst PirateDEXAppDir
         WORKING_DIRECTORY ${TARGET_APP_PATH}
         ECHO_OUTPUT_VARIABLE
         ECHO_ERROR_VARIABLE)
