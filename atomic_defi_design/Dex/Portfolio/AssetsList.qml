@@ -96,13 +96,13 @@ Dex.DexListView
 
     delegate: Rectangle
     {
-        property color _idleColor: index % 2 === 1 ? Dex.CurrentTheme.backgroundColor : Dex.CurrentTheme.innerBackgroundColor
+        property color _idleColor: index % 2 === 1 ? Dex.CurrentTheme.listItemOddBackground : Dex.CurrentTheme.listItemEvenBackground
         property int   activation_progress: Dex.General.zhtlcActivationProgress(activation_status, ticker)
 
         width: list.width
         height: _assetRowHeight
 
-        color: mouseArea.containsMouse ? Dex.CurrentTheme.buttonColorHovered : _idleColor
+        color: mouseArea.containsMouse ? Dex.CurrentTheme.listItemHoveredBackground : _idleColor
 
         RowLayout
         {
@@ -142,7 +142,7 @@ Dex.DexListView
                         verticalAlignment: Text.AlignVCenter
                         text: activation_progress + "%"
                         font: Dex.DexTypo.head8
-                        color: Dex.DexTheme.greenColor
+                        color: Dex.DexTheme.okColor
                     }
                 }
 
@@ -177,7 +177,7 @@ Dex.DexListView
                         text: "IDO"
                         font: Dex.DexTypo.overLine
                         opacity: .7
-                        color: Dex.DexTheme.redColor
+                        color: Dex.DexTheme.warningColor
                     }
                 }
             }
@@ -203,7 +203,7 @@ Dex.DexListView
                     return parseFloat(balance).toFixed(8)
                 }
 
-                color: text_value == parseFloat(balance).toFixed(8) ? Qt.darker(Dex.DexTheme.foregroundColor, 0.8) : Dex.DexTheme.redColor
+                color: text_value == parseFloat(balance).toFixed(8) ? Qt.darker(Dex.DexTheme.foregroundColor, 0.8) : Dex.DexTheme.warningColor
                 privacy: true
             }
 
