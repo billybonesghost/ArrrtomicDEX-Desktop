@@ -10,8 +10,8 @@ set(DEX_WEBSITE "https://pirate.black/")
 set(DEX_SUPPORT_PAGE "https://pirate.black/frequently-asked-questions")
 set(DEX_DISCORD "https://pirate.black/discord")
 set(DEX_TWITTER "https://twitter.com/piratechain")
-set(DEX_PRIMARY_COIN "ARRR")                                                         ## Main coin of the DEX, will be enabled by default and will be the default left ticker for trading
-set(DEX_SECOND_PRIMARY_COIN "KMD")                                                   ## Second main coin of the DEX, will be enabled by default and will be the default right ticker for trading
+set(DEX_PRIMARY_COIN "LTC-segwit")                 ## Main coin of the DEX, will be enabled by default and will be the default left ticker for trading. Can't be a Zcoin.
+set(DEX_SECOND_PRIMARY_COIN "KMD")                 ## Second main coin of the DEX, will be enabled by default and will be the default right ticker for trading. Can't be a Zcoin.
 option(DISABLE_GEOBLOCKING "Enable to disable geoblocking (for dev purpose)" OFF)
 set(DEX_REPOSITORY_OWNER ${DEX_COMPANY})
 set(DEX_VERSION "0.6.1")
