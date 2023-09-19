@@ -1,6 +1,6 @@
 {
   "name": "piratedex-desktop",
-  "version-string": "0.5.7.0",
+  "version-string": "0.6.1",
   "dependencies": [
     "entt",
     "boost-multiprecision",

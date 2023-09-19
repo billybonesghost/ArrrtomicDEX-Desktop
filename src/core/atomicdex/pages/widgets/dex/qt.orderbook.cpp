@@ -38,7 +38,6 @@ namespace
             // If cur_min_volume in the UI < base_min_vol_threshold override
             if (cur_min_volume_f < base_min_vol_threshold)
             {
-                // SPDLOG_INFO("cur_min_taker_vol: {}", cur_taker_vol.toStdString());
                 trading_pg.set_min_trade_vol(cur_taker_vol);
             }
         }
@@ -92,12 +91,12 @@ namespace atomic_dex
         else if (m_best_orders->rowCount() == 0)
         {
             // SPDLOG_INFO("[qt_orderbook_wrapper::refresh_orderbook] : reset_best_orders");
-            m_best_orders->reset_orderbook(data);
+            m_best_orders->reset_orderbook(data, true);
         }
         else
         {
             // SPDLOG_INFO("[qt_orderbook_wrapper::refresh_orderbook] : refresh_best_orders");
-            m_best_orders->refresh_orderbook(data);
+            m_best_orders->refresh_orderbook(data, true);
         }
         this->set_both_taker_vol();
     }
