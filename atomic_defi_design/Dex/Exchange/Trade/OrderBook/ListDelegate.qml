@@ -135,7 +135,7 @@ Item
             height: 6
             radius: width / 2
             visible: is_mine
-            color: isAsk ? Dex.CurrentTheme.noColor : Dex.CurrentTheme.okColor
+            color: isAsk ? Dex.CurrentTheme.warningColor : Dex.CurrentTheme.okColor
         }
 
         // Progress bar
@@ -156,7 +156,7 @@ Item
                 Behavior on width { NumberAnimation { duration: 1000 } }
                 radius: 3
                 opacity: 0.8
-                color: isAsk ? Dex.CurrentTheme.noColor : Dex.CurrentTheme.okColor
+                color: isAsk ? Dex.CurrentTheme.warningColor : Dex.CurrentTheme.okColor
                 Component.onCompleted: width = ((depth * 100) * (mouse_area.width + 40)) / 100
             }
         }
@@ -176,7 +176,7 @@ Item
                 text: { new BigNumber(price).toFixed(8) }
                 font.family: DexTypo.fontFamily
                 font.pixelSize: 12
-                color: isAsk ? Dex.CurrentTheme.noColor : Dex.CurrentTheme.okColor
+                color: isAsk ? Dex.CurrentTheme.warningColor : Dex.CurrentTheme.okColor
                 horizontalAlignment: Text.AlignRight
                 wrapMode: Text.NoWrap
             }
@@ -188,7 +188,7 @@ Item
             {
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width * 0.37
-                text: { new BigNumber(rel_max_volume).toFixed(6) }
+                text: { new BigNumber(base_max_volume).toFixed(6) }
                 font.family: DexTypo.fontFamily
                 font.pixelSize: 12
                 horizontalAlignment: Text.AlignRight
