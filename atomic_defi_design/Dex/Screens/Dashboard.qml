@@ -87,14 +87,7 @@ Item
         sidebar.currentLineType = currentPage
         if (currentPage == Dashboard.PageType.DEX)
         {
-            if (API.app.trading_pg.current_trading_mode == TradingMode.Pro)
-            {
-                API.app.trading_pg.set_pair(false, api_wallet_page.ticker)
-            }
-            else
-            {
-                API.app.trading_pg.set_pair(true, api_wallet_page.ticker)
-            }
+            API.app.trading_pg.set_pair(true, api_wallet_page.ticker)
         }
     }
 
@@ -110,7 +103,7 @@ Item
             if (API.app.portfolio_pg.portfolio_mdl.length > atomic_settings2.value("MaximumNbCoinsEnabled")) {
                 open()
                 onTimerEnded = () => {
-                    API.app.settings_pg.reset_coin_cfg()
+                    API.app.reset_coin_cfg()
                 }
             }
         }
@@ -286,6 +279,7 @@ Item
         enabled: loader.status === Loader.Ready
 
         onLineSelected: currentPage = lineType;
+        onAddCryptoClicked: enable_coin_modal.open()
         onSettingsClicked: setting_modal.open()
         onSupportClicked: support_modal.open()
     }
