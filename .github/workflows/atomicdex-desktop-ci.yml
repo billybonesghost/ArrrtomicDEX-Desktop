@@ -23,6 +23,7 @@ env:
   RUNVCPKG_VCPKG_ROOT: ${{ github.workspace }}\komodo-wallet-desktop\ci_tools_atomic_dex\vcpkg-repo
   VCPKG_ROOT: ${{ github.workspace }}\komodo-wallet-desktop\ci_tools_atomic_dex\vcpkg-repo
 
+
 jobs:
 
   ci-flow:
@@ -203,8 +204,7 @@ jobs:
         uses: lukka/run-vcpkg@v11
         with:
           vcpkgDirectory: '${{ github.workspace }}/ci_tools_atomic_dex/vcpkg-repo'
-          setupOnly: true
-          appendedCacheKey: ${{ hashFiles('vcpkg.json') }}
+          vcpkgJsonGlob: 'vcpkg.json'
 
       - name: import code signing certificates (macos)
         if: runner.os == 'macOS'  && 'KomodoPlatform/komodo-wallet-desktop' == github.repository
@@ -224,8 +224,6 @@ jobs:
           create-keychain: false
           p12-file-base64: ${{ secrets.CERTIFICATES_INSTALLER_P12 }}
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
-
-
 
       - name: Build PirateDEX (MacOS)
         if: runner.os == 'macOS'
