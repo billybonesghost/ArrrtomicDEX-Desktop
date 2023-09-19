@@ -3,6 +3,9 @@ import QtQuick.Layouts 1.15
 
 import bignumberjs 1.0
 
+import "../Constants"
+import Dex.Themes 1.0 as Dex
+
 DefaultRectangle
 {
     id: root
@@ -14,6 +17,7 @@ DefaultRectangle
     width: 260
     height: 66
     radius: 10
+    color: Dex.CurrentTheme.tickerBadgeBackgroundColor
 
     RowLayout
     {
@@ -31,6 +35,7 @@ DefaultRectangle
             Layout.preferredWidth: 35
             Layout.preferredHeight: 35
             Layout.alignment: Qt.AlignVCenter
+            source: General.coinIcon(root.ticker)
         }
 
         Item { Layout.fillWidth: true }

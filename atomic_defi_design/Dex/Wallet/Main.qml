@@ -112,7 +112,7 @@ Item
                                 verticalAlignment: Text.AlignVCenter
                                 text: activation_progress + "%"
                                 font: DexTypo.head8
-                                color: DexTheme.greenColor
+                                color: DexTheme.okColor
                             }
                         }
 
@@ -432,11 +432,11 @@ Item
                     enabled: General.canSend(api_wallet_page.ticker, activation_progress)
                     anchors.fill: parent
                     radius: 18
-
                     label.text: qsTr("Send")
                     label.font.pixelSize: 16
                     content.anchors.left: content.parent.left
                     content.anchors.leftMargin: enabled ? 23 : 48
+                    content.anchors.rightMargin: 23
 
                     onClicked:
                     {
@@ -444,13 +444,19 @@ Item
                         else enable_fees_coin_modal.open()
                     }
 
-                    TransactionArrow
+                    Row
                     {
-                        id: arrow_send
-                        amISender: true
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
-                        anchors.rightMargin: 19
+                        anchors.rightMargin: 23
+
+                        Qaterial.Icon
+                        {
+                            icon: Qaterial.Icons.arrowTopRight
+                            size: 24
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: Dex.CurrentTheme.warningColor
+                        }
                     }
                 }
 
@@ -533,7 +539,7 @@ Item
                 DefaultButton
                 {
                     // Address wont display until activated
-                    enabled: General.isZhtlcReady(api_wallet_page.ticker, activation_progress)
+                    enabled: General.isZhtlcReady(api_wallet_page.ticker)
                     anchors.fill: parent
                     radius: 18
 
@@ -544,19 +550,26 @@ Item
 
                     onClicked: receive_modal.open()
 
-                    TransactionArrow
+                    Row
                     {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
-                        anchors.rightMargin: 19
-                        amISender: false
+                        anchors.rightMargin: 23
+
+                        Qaterial.Icon
+                        {
+                            icon: Qaterial.Icons.arrowBottomRight
+                            size: 24
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: Dex.CurrentTheme.okColor
+                        }
                     }
                 }
 
                 // Receive button error icon
                 DefaultAlertIcon
                 {
-                    visible: !General.isZhtlcReady(api_wallet_page.ticker, activation_progress)
+                    visible: !General.isZhtlcReady(api_wallet_page.ticker)
                     tooltipText: api_wallet_page.ticker + qsTr(" Activation: " + activation_progress + "%")
                 }
             }
@@ -592,21 +605,17 @@ Item
                     {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
-                        anchors.rightMargin: arrow_send.anchors.rightMargin
-                        spacing: 2
+                        anchors.rightMargin: 23
 
-                        TransactionArrow
+                        Qaterial.Icon
                         {
-                            amISender: true
+                            icon: Qaterial.Icons.swapHorizontal
+                            size: 28
                             anchors.verticalCenter: parent.verticalCenter
-                        }
-
-                        TransactionArrow
-                        {
-                            amISender: false
-                            anchors.verticalCenter: parent.verticalCenter
+                            color: Dex.CurrentTheme.swapIconColor
                         }
                     }
+
                 }
 
                 // Swap button error icon
@@ -656,15 +665,42 @@ Item
             {
                 Layout.preferredWidth: 180
                 Layout.preferredHeight: 48
-                visible: enabled && current_ticker_infos.is_smartchain_test_coin
+                visible:  current_ticker_infos.is_smartchain_test_coin
 
                 DefaultButton
                 {
-                    text: qsTr("Faucet")
-                    radius: 18
-                    font.pixelSize: 16
+                    enabled: activation_progress == 100
                     anchors.fill: parent
+                    radius: 18
+                    label.text: qsTr("Faucet")
+                    label.font.pixelSize: 16
+                    content.anchors.left: content.parent.left
+                    content.anchors.leftMargin: enabled ? 23 : 48
+                    content.anchors.rightMargin: 23
+
                     onClicked: api_wallet_page.claim_faucet()
+
+                    Row
+                    {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 23
+
+                        Qaterial.Icon
+                        {
+                            icon: Qaterial.Icons.water
+                            size: 24
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: "cyan"
+                        }
+                    }
+                }
+
+                // Faucet button error icon
+                DefaultAlertIcon
+                {
+                    visible: activation_progress != 100
+                    tooltipText: api_wallet_page.ticker + qsTr(" Activation: " + activation_progress + "%")
                 }
             }
 
