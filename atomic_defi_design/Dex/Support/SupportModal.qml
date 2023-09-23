@@ -42,7 +42,7 @@ Qaterial.Dialog
         DexRectangle
         {
             anchors.fill: parent
-            color: 'black'
+            color: DexTheme.backgroundColor
             opacity: .7
         }
     }
