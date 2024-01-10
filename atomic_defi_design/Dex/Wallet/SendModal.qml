@@ -508,7 +508,7 @@ MultipageModal
                     DefaultText
                     {
                         id: fiat_symbol
-                        visible: _preparePage.cryptoSendMode && API.app.settings_pg.current_currency_sign != "KMD"
+                        visible: _preparePage.cryptoSendMode && API.app.settings_pg.current_currency_sign != "KMD" && API.app.settings_pg.current_currency_sign != "ARRR"
                         font.pixelSize: 18
                         anchors.centerIn: parent
                         text: API.app.settings_pg.current_currency_sign
@@ -520,7 +520,7 @@ MultipageModal
                         anchors.centerIn: parent
                         width: 18
                         height: 18
-                        source: General.coinIcon(API.app.wallet_pg.ticker)
+                        source: _preparePage.cryptoSendMode ? General.coinIcon(API.app.settings_pg.current_currency_sign) : General.coinIcon(API.app.wallet_pg.ticker)
                     }
                 }
 
