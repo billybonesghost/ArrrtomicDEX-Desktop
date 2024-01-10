@@ -17,7 +17,7 @@ env:
   DEX_DISPLAY_NAME: "PirateDEX Desktop"
   DEX_COMPANY: "Pirate"
   DEX_WEBSITE: "https://pirate.black/"
-  DEX_VERSION: "0.6.1"
+  DEX_VERSION: "0.7.0"
   VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/b/vcpkg_cache
   VCPKG_BINARY_SOURCES: clear;x-gha,readwrite
   RUNVCPKG_VCPKG_ROOT: ${{ github.workspace }}\komodo-wallet-desktop\ci_tools_atomic_dex\vcpkg-repo
@@ -56,13 +56,13 @@ jobs:
             host: 'linux'
 
           - name: osx-release
-            os: macos-11
+            os: macos-12
             qt: '5.15.2'
             type: 'Release'
             host: 'mac'
 
           - name: osx-debug
-            os: macos-11
+            os: macos-12
             qt: '5.15.2'
             type: 'Debug'
             host: 'mac'
