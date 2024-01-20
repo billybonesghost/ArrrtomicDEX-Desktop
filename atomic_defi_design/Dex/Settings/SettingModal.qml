@@ -47,7 +47,7 @@ Qaterial.Dialog
         Rectangle
         {
             anchors.fill: parent
-            color: 'black'
+            color: DexTheme.backgroundColor
             opacity: .7
         }
     }

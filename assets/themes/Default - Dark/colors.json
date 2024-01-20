@@ -7,7 +7,7 @@
     "secondBackgroundColor": "#1B1B1BFF",
     "backgroundColorDeep": "#161515FF",
     "innerBackgroundColor": "#181818FF",
-    "floatingBackgroundColor": "#1B1B1BFF",
+    "floatingBackgroundColor": "#1D1D1DFF",
 
     "busyIndicatorColor": "#BB9645FF",
 
@@ -15,20 +15,20 @@
     "buttonColorEnabled": "#BB9645EE",
     "buttonColorHovered": "#BB9645FF",
     "buttonColorPressed": "#BB9645FF",
-    "buttonTextDisabledColor": "#444444FF",
+    "buttonTextDisabledColor": "#222222FF",
     "buttonTextEnabledColor": "#ffffffFF",
     "buttonTextHoveredColor": "#ffffffFF",
     "buttonTextPressedColor": "#ffffffFF",
  
-    "buttonSecondaryColorDisabled": "#28375AFF",
-    "buttonSecondaryColorEnabled":  "#293254FF",
-    "buttonSecondaryColorHovered":  "#4068B929",
-    "buttonSecondaryColorPressed":  "#2932546C",
+    "buttonSecondaryColorDisabled": "#987835FF",
+    "buttonSecondaryColorEnabled":  "#c1880dFF",
+    "buttonSecondaryColorHovered":  "#7d622229",
+    "buttonSecondaryColorPressed":  "#c1880d6C",
 
-    "buttonCancelColorDisabled": "#28375AFF",
-    "buttonCancelColorEnabled":  "#293254FF",
-    "buttonCancelColorHovered":  "#4068B929",
-    "buttonCancelColorPressed":  "#2932546C",
+    "buttonCancelColorDisabled": "#987835FF",
+    "buttonCancelColorEnabled":  "#c1880dFF",
+    "buttonCancelColorHovered":  "#7d622229",
+    "buttonCancelColorPressed":  "#c1880d6C",
 
     "gradientButtonStartColor": "#B38C30FF",
     "gradientButtonEndColor": "#F2DE98FF",
@@ -38,10 +38,10 @@
     "gradientButtonHoveredEndColor": "#F2DE98FF",
     "gradientButtonPressedStartColor": "#B38C30FF",
     "gradientButtonPressedEndColor": "#F2DE98FF",
-    "gradientButtonTextEnabledColor": "#FFFFFFFF",
+    "gradientButtonTextEnabledColor": "#000000FF",
     "gradientButtonTextDisabledColor": "#FFFFFFFF",
-    "gradientButtonTextHoveredColor": "#FFFFFFFF",
-    "gradientButtonTextPressedColor": "#FFFFFFFF",
+    "gradientButtonTextHoveredColor": "#111111FF",
+    "gradientButtonTextPressedColor": "#333333FF",
 
     "checkBoxTickColor": "#FFFFFFFF",
     "checkBoxGradientStartColor": "#B38C30FF",
@@ -81,7 +81,7 @@
     "textFieldPrefixColor": "#8790B2FF",
     "textFieldSuffixColor": "#8790B2FF",
 
-    "tickerBadgeBackgroundColor": "#202337FF",
+    "tickerBadgeBackgroundColor": "#343435FF",
 
     "chartTradingLineBackgroundColor": "#24283dFF",
     "chartTradingLineColor": "#74fbeeFF",
@@ -107,17 +107,17 @@
     "tradeSellModeSelectorBackgroundColorEnd":   "#CD0F53FF",
 
     "inputModifierBackgroundColor": "#89B6FF21",
-    "inputFieldBackgroundColor":    "#313555FF",
+    "inputFieldBackgroundColor":    "#3f3f3fFF",
 
-    "inputFieldBorderColor":        "#20233788",
+    "inputFieldBorderColor":        "#34343588",
     "inputPlaceholderTextColor":    "#FFFFFFFF",
     "inputRightIconColor":          "#FFFFFFFF",
     "inputLeftIconColor":           "#FFFFFFFF",
-    "inputLeftIconBackgroundColor": "#202337FF",
+    "inputLeftIconBackgroundColor": "#343435FF",
 
-    "listItemOddBackground": "#202337FF",
-    "listItemEvenBackground": "#24273DFF",
-    "listItemHoveredBackground": "#4068B9FF",
+    "listItemOddBackground": "#343435FF",
+    "listItemEvenBackground": "#232323FF",
+    "listItemHoveredBackground": "#7d6222FF",
 
     "addressBookTagColors": ["#003bbbFF", "#006133FF", "#612600FF", "#430061FF", "#004d61FF"],
 
@@ -131,5 +131,5 @@
     "arrowUpColor": "#F85757FF",
     "arrowDownColor": "#845FEFFF",
 
-    "lineSeparatorColor": "#262941FF"
+    "lineSeparatorColor": "#212121FF"
 }
