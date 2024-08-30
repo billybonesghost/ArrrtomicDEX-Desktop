@@ -1,5 +1,5 @@
 # Default project values
-set(DEX_API "mm2-pirate")
+set(DEX_API "kdf-pirate")
 set(DEX_RPCPORT 7888)
 set(DEX_RPC "http://127.0.0.1:7888")
 set(DEX_PROJECT_NAME "PirateDEX-desktop")
